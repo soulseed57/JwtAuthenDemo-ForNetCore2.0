@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
     using Models;
+    using Service;
 
     [Route("api/[controller]")]
     public class AuthorizeController : Controller
@@ -36,7 +37,7 @@
             {
                 return BadRequest(new { error = "验证账号密码失败" });
             }
-            user.role = "admin";
+            user.role = "manager";
 
             // 配置参数
             var claims = new[]{
@@ -58,8 +59,8 @@
                 DateTime.Now,
                 DateTime.Now.AddMinutes(30),
                 signingCredentials);
-
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            
+            return Ok(new { token = JwtSecurityTokenService.Encode(token) });
         }
     }
 }
